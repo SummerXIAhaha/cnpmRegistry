@@ -12,6 +12,8 @@ var version = require('../package.json').version;
 var root = path.dirname(__dirname);
 var dataDir = path.join(process.env.HOME || root, '.cnpmjs.org');
 
+// https://blog.csdn.net/qq_37477349/article/details/88304769 参考文档
+
 var config = {
   version: version,
   dataDir: dataDir,
@@ -28,7 +30,7 @@ var config = {
 
   registryPort: 7001,
   webPort: 7002,
-  bindingHost: '127.0.0.1', // only binding on 127.0.0.1 for local access
+  bindingHost: '', // only binding on 127.0.0.1 for local access //监听绑定的 Host，默认127.0.0.1，外网访问注释掉此项或改为0.0.0.0即可
   // default is ctx.protocol
   protocol: '',
 
@@ -81,7 +83,7 @@ var config = {
   admins: {
     // name: email
     fengmk2: 'fengmk2@gmail.com',
-    admin: 'admin@cnpmjs.org',
+    admin: '694925572@qq.com',
     dead_horse: 'dead_horse@qq.com',
   },
 
@@ -114,14 +116,14 @@ var config = {
    * database config
    */
 
-  database: {
-    db: 'cnpmjs_test',
+  database: { // 数据库相关
+    db: 'cnpmjs', //数据库name
     username: 'root',
-    password: '',
+    password: '12345',
 
     // the sql dialect of the database
     // - currently supported: 'mysql', 'sqlite', 'postgres', 'mariadb'
-    dialect: 'sqlite',
+    dialect: 'mysql',
 
     // custom host; default: 127.0.0.1
     host: '127.0.0.1',
@@ -163,8 +165,10 @@ var config = {
   // remove original tarball when publishing
   unpublishRemoveTarball: true,
 
-  // registry url name
-  registryHost: 'r.cnpmjs.org',
+  // registry url name //模块注册列表访问域名，默认r.cnpmjs.org，安装模块时会到这个域名下查找，
+  // 如果本地自己下载可以先清空。
+  // 外网下载则直接配置外网IP地址
+  registryHost: '127.0.0.1',
 
   /**
    * registry mode config
@@ -173,9 +177,10 @@ var config = {
   // enable private mode or not
   // private mode: only admins can publish, other users just can sync package from source npm
   // public mode: all users can publish
-  enablePrivate: false,
+  enablePrivate: true,
 
   // registry scopes, if don't set, means do not support scopes
+  // 若为非私有模式发布则此项必填，非管理员发布模块式命名必须以scopes字段开头，模块命名示例“@cnpm/packagename”
   scopes: [ '@cnpm', '@cnpmtest', '@cnpm-test' ],
 
   // some registry already have some private packages in global scope
@@ -210,9 +215,9 @@ var config = {
 
   // sync mode select
   // none: do not sync any module, proxy all public modules from sourceNpmRegistry
-  // exist: only sync exist modules
+  // exist: only sync exist modules 只同步已经存在于数据库的模块
   // all: sync all modules
-  syncModel: 'none', // 'none', 'all', 'exist'
+  syncModel: 'exist', // 'none', 'all', 'exist'
 
   syncConcurrency: 1,
   // sync interval, default is 10 minutes
